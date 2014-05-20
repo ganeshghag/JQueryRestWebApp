@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Strict//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta name="viewport" content="width=device-width" />
+<title>Party Detail</title>
+
+<script type="text/javascript" src="js/jquery-1.5.2.min.js"></script>
+<script type="text/javascript" src="js/json2.js"></script>
+
+
+<script>
+	var data;
+	$(document).ready(function(){
+		data = window.location.search.substr(1).split('=');
+		$.getJSON("http://172.16.84.129:8081/jqueryrest/restful/party/"+data[1], function(mydata) {
+			$("#partyId").val(mydata.partyId);
+			$("#name").val(mydata.name);
+			$("#address").val(mydata.address);
+			$("#telephone").val(mydata.telephone);
+			$("#description").val(mydata.description);
+		});
+		
+	});
+	
+	function updateParty(){
+		$.getJSON("http://172.16.84.129:8081/jqueryrest/restful/party/"+data[1]+'/update?description='+$("#description").val(),function(data){
+			alert('Party details updated');
+		});
+	}
+	
+	function deleteParty(){
+		$.getJSON("http://172.16.84.129:8081/jqueryrest/restful/party/"+data[1]+'/delete',function(data){
+			alert('Party deleted');
+		});
+		
+	}
+	
+	function updatePartyExExEx(){
+		inputData = new Object();
+		inputData.partyId = $("#partyId").val();
+		inputData.name = $("#name").val();
+		inputData.address = $("#address").val();
+		inputData.telephone = $("#telephone").val();
+		inputData.description = $("#description").val();
+		
+		//alert(JSON.stringify(inputData));
+		
+		jQuery.ajax ({
+		    url: 'http://172.16.84.129:8081/jqueryrest/restful/party/directUpdate',
+		    type: "POST",
+		    processData: "false",
+		    data: JSON.stringify(inputData),
+		    dataType: "json",
+		    contentType: "application/json",
+		    success: function(){
+		        alert('success');
+		    }
+		});
+
+	}
+
+	
+</script>
+</head>
+<body>
+<form id="myform1" name="myform1" action="http://172.16.84.129:8081/jqueryrest/restful/party/updateExEx" method="POST">
+	<table>
+		<tr>
+			<td>Party Id</td>
+			<td><input type="text" id="partyId" name="partyId"/></td>
+		</tr>
+		<tr>
+			<td>Name</td>
+			<td><input type="text" id="name" name="name"/></td>
+		</tr>
+		<tr>
+			<td>Address</td>
+			<td><input type="text" id="address" name="address"/></td>
+		</tr>
+		<tr>
+			<td>Telephone</td>
+			<td><input type="text" id="telephone" name="telephone"/></td>
+		</tr>
+		<tr>
+			<td>Description</td>
+			<td><input type="text" id="description" name="description"/></td>
+		</tr>
+	</table>
+	
+	<br>
+	<input type="button" value="Update" onclick="updateParty();"/>
+	<input type="button" value="Delete" onclick="deleteParty();"/>
+	<input type="submit" value="Update Ex" />
+	<input type="button" value="Update Ex Ex Ex" onclick="updatePartyExExEx()"/>
+</form>
+
+</body>
+</html>
